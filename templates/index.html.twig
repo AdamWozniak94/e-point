@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="resultDiv" style="display: none">
+        <p style="display: inline"><strong>Result:</strong></p>
+        <p style="display: inline" id="result"></p>
+    </div>
+    <form id="form">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text">
+        <label for="country">Country</label>
+        <select name="country" id="country">
+            {% for countryCode, countryName in countryNamesArray %}
+                <option value="{{ countryCode }}">{{ countryName }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" id="submit">Submit</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $("#submit").click(function () {
+                let data = $('#form').serialize();
+                let settings = {
+                    url: '{{ path('app_form_result') }}',
+                    type: 'POST',
+                    data: data
+                }
+
+                $.ajax(settings).done(function (response) {
+                    $("#resultDiv").show();
+                    $("#result").text(response);
+                })
+            })
+        })
+    </script>
+
+{% endblock %}
